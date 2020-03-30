@@ -1,4 +1,5 @@
 const { utcToZonedTime, format } = require("date-fns-tz");
+const { isToday } = require("date-fns");
 
 let Attendances = require("../models/attendances");
 
@@ -12,18 +13,21 @@ module.exports = {
       let timesheet = "";
 
       docs.map(doc => {
-        timesheet += "punch " + doc.punchType + " @ ";
-
         const date = new Date(doc.createdAt);
         const date_zoned = utcToZonedTime(
           date,
           Intl.DateTimeFormat().resolvedOptions().timeZone
         );
-        const date_formatted = format(date_zoned, "dd-MM-yyyy HH:mm:ss zzz", {
-          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-        });
-        timesheet += date_formatted;
-        timesheet += "\n";
+
+        if (isToday(date_zoned)) {
+          const date_formatted = format(date_zoned, "dd-MM-yyyy HH:mm:ss zzz", {
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+          });
+
+          timesheet += "punch " + doc.punchType + " @ ";
+          timesheet += date_formatted;
+          timesheet += "\n";
+        }
       });
       msg.reply(`${member} 's timesheet for today: \n${timesheet}`);
     });
