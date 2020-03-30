@@ -8,7 +8,6 @@ module.exports = {
   execute(msg, args) {
     const member = msg.mentions.members.first();
     const member_name = msg.mentions.members.first().nickname;
-    console.log(member, member_name);
     Attendances.find({ memberName: member_name }).then(docs => {
       let timesheet = "";
 
@@ -25,10 +24,7 @@ module.exports = {
         });
         timesheet += date_formatted;
         timesheet += "\n";
-
-        console.log(date, date_zoned, date_formatted);
       });
-      console.log(timesheet);
       msg.reply(`${member} 's timesheet for today: \n${timesheet}`);
     });
   }
