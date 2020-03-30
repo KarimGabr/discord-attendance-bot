@@ -1,2 +1,0 @@
-# KarimGabr
-discord-attendance-bot
